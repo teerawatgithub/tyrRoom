@@ -48,7 +48,8 @@ class VideosRepository(private val database: VideosDatabase) {
         withContext(Dispatchers.IO) {
             Timber.d("refresh videos is called");
             val playlist = DevByteNetwork.devbytes.getPlaylist().await()
-            database.videoDao.insertAll(playlist.asDatabaseModel())
+
+            database.videoDao.insertAll(playlist[0].asDatabaseModel())
         }
     }
 
