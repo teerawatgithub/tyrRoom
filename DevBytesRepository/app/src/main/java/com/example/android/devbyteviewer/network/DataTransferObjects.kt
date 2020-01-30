@@ -57,6 +57,7 @@ data class NetworkVideo(
 
 @JsonClass(generateAdapter = true)
 data class UpdatedNetWork(
+        @PrimaryKey(autoGenerate = true) val updatedId: Int,
         val updatedSmall: String,
         val number: Int)
 
@@ -80,16 +81,16 @@ data class UpdatedNetWork(
  * Convert Network results to database objects
  */
 fun NetworkVideoContainer.asDatabaseModel(): List<DatabaseWithUpdated> {
-    lateinit var listUpdate: ArrayList<Update>
-    for (i in 0 until (videos.size - 1)){
-        for (j in 0 until (videos[i].updated.size -1)){
-            listUpdate.add(Update(j.toInt(),
-                    videos[i].id,
-                    videos[i].updated[j].updatedSmall,
-                    videos[i].updated[j].number
-                    ))
-        }
-    }
+//    lateinit var listUpdate: ArrayList<Update>
+//    for (i in 0 until (videos.size - 1)){
+//        for (j in 0 until (videos[i].updated.size -1)){
+//            listUpdate.add(Update(j.toInt(),
+//                    videos[i].id,
+//                    videos[i].updated[j].updatedSmall,
+//                    videos[i].updated[j].number
+//                    ))
+//        }
+//    }
     return videos.map {
         DatabaseWithUpdated(
                 databaseVideoId = it.id,
@@ -105,9 +106,11 @@ fun NetworkVideoContainer.asDatabaseModel(): List<DatabaseWithUpdated> {
 fun NetworkVideo.asUpdatedDatebaseModel(id: Int): List<Update> {
     return  updated.map {
         Update(
+                updatedId = it.updatedId,
                 updatedOwner = id,
-
+                updatedSmall = it.updatedSmall,
+                number = it.number
         )
     }
-    }
 }
+

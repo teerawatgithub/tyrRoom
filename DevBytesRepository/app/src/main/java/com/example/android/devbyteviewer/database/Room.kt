@@ -32,7 +32,8 @@ interface VideoDao {
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll( videos: List<DatabaseVideo>)
+    fun insertDatabaseWithUpdated( videos: List<DatabaseWithUpdated>)
+    fun insertUpdated( updated: List<Update>)
 }
 
 

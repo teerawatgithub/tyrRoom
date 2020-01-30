@@ -23,6 +23,7 @@ import com.example.android.devbyteviewer.database.asDomainModel
 import com.example.android.devbyteviewer.domain.DevByteVideo
 import com.example.android.devbyteviewer.network.DevByteNetwork
 import com.example.android.devbyteviewer.network.asDatabaseModel
+import com.example.android.devbyteviewer.network.asUpdatedDatebaseModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -49,7 +50,14 @@ class VideosRepository(private val database: VideosDatabase) {
             Timber.d("refresh videos is called");
             val playlist = DevByteNetwork.devbytes.getPlaylist().await()
 
-            database.videoDao.insertAll(playlist[0].videos[0].updated)
+            for (i in 0 until (playlist.size - 1)) {
+                database.videoDao.insertDatabaseWithUpdated(playlist[i].asDatabaseModel())
+                for (j in 0 until (playlist[i].videos.size)) {
+                    database.videoDao.insertUpdated(playlist[i].videos[j].asUpdatedDatebaseModel(j))
+                }
+            }
+
+
         }
     }
 
