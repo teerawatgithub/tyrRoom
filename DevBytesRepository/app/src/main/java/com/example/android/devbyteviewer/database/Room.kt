@@ -23,21 +23,21 @@ import androidx.room.*
 @Dao
 interface VideoDao {
     @Transaction
-    @Query("select * from DatabaseWithUpdated")
+    @Query("select * from database_with_updated")
     fun getVideos(): LiveData<List<DatabaseVideo>>
 
 //    @Transaction
 //    @Query("select * from `update` WHERE updatedSmall LIKE :search")
 //    fun findByUpdated(search: String): LiveData<List<DatabaseVideo>>
 
-    @Transaction
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll( videos: List<DatabaseVideo>)
 }
 
 
 
-@Database(entities = [DatabaseWithUpdated::class], version = 1)
+@Database(entities = [DatabaseWithUpdated::class, Update::class], version = 1)
 abstract class VideosDatabase: RoomDatabase() {
     abstract val videoDao: VideoDao
 }

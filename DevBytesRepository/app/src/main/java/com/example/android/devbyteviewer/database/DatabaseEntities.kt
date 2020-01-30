@@ -29,11 +29,12 @@ import com.example.android.devbyteviewer.domain.DevByteVideo
  */
 @Entity
 data class Update(
-        @PrimaryKey
+        @PrimaryKey (autoGenerate = true)
         val updatedId: Int,
+        val updatedOwner: Int,
         val updatedSmall: String,
-        val number: Int,
-        val updatedOwner: Int
+        val number: Int
+
 )
 
 
@@ -43,14 +44,14 @@ data class DatabaseVideo(
                 parentColumn = "databaseVideoId",
                 entityColumn = "updatedOwner"
         )
-        val updated: ArrayList<Update>
+        val updated: List<Update>
 )
 
 /**
  * DatabaseVideo represents a video entity in the database.
  */
-@Entity
-data class DatabaseWithUpdated constructor(
+@Entity(tableName = "database_with_updated")
+data class DatabaseWithUpdated (
         @PrimaryKey val databaseVideoId: Int,
         val url: String,
         val title: String,
@@ -67,7 +68,7 @@ fun List<DatabaseVideo>.asDomainModel(): List<DevByteVideo> {
                         url = it.databaseVideo.url,
                         title = it.databaseVideo.title,
                         description = it.databaseVideo.description,
-                        updated = it.updated,
+                        updated = it.updated as ArrayList<Update>,
                         thumbnail = it.databaseVideo.thumbnail)
         }
 }
