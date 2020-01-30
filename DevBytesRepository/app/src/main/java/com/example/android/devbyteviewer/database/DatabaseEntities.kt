@@ -16,8 +16,10 @@
 
 package com.example.android.devbyteviewer.database
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.Relation
 import com.example.android.devbyteviewer.domain.DevByteVideo
 
 
@@ -25,16 +27,31 @@ import com.example.android.devbyteviewer.domain.DevByteVideo
  * Database entities go in this file. These are responsible for reading and writing from the
  * database.
  */
+@Entity
+data class Update(
+        @PrimaryKey(autoGenerate = true) val updatedId: Int,
+        val updatedSmall: String,
+        val number: Int,
+        val updatedOwner: Int
+)
 
+
+data class DatabaseVideo(
+        @Embedded val databaseVideo: DatabaseWithUpdated,
+        @Relation(
+                parentColumn = "databaseVideoId",
+                entityColumn = "updatedOwner"
+        )
+        val updated: List<Update>
+)
 
 /**
  * DatabaseVideo represents a video entity in the database.
  */
 @Entity
-data class DatabaseVideo constructor(
-        @PrimaryKey
+data class DatabaseWithUpdated constructor(
+        @PrimaryKey val databaseVideoId: Int,
         val url: String,
-        val updated: String,
         val title: String,
         val description: String,
         val thumbnail: String)
@@ -46,10 +63,10 @@ data class DatabaseVideo constructor(
 fun List<DatabaseVideo>.asDomainModel(): List<DevByteVideo> {
         return map {
                 DevByteVideo(
-                        url = it.url,
-                        title = it.title,
-                        description = it.description,
+                        url = it.databaseVideo.url,
+                        title = it.databaseVideo.title,
+                        description = it.databaseVideo.description,
                         updated = it.updated,
-                        thumbnail = it.thumbnail)
+                        thumbnail = it.databaseVideo.thumbnail)
         }
 }
