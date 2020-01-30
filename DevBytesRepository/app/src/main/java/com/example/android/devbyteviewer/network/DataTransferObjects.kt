@@ -48,43 +48,57 @@ data class NetworkVideoContainer(val videos: List<NetworkVideo>)
  */
 @JsonClass(generateAdapter = true)
 data class NetworkVideo(
-        @PrimaryKey(autoGenerate = true)val databaseVideoId: Int,
+        @PrimaryKey(autoGenerate = true) val id: Int,
         val title: String,
         val description: String,
         val url: String,
-        val updated: List<Update>,
+        val updated: List<UpdatedNetWork>,
         val thumbnail: String,
         val closedCaptions: String?)
+
+data class UpdatedNetWork(
+        val updatedSmall: String,
+        val number: Int)
 
 /**
  * Convert Network results to database objects
  */
-fun NetworkVideoContainer.asDomainModel(): List<DevByteVideo> {
-    return videos.map {
-        DevByteVideo(
-                title = it.title,
-                description = it.description,
-                url = it.url,
-                updated = it.updated,
-                thumbnail = it.thumbnail)
-    }
-}
+//fun NetworkVideoContainer.asDomainModel(): List<DevByteVideo> {
+//
+//    return videos.map {
+//        DevByteVideo(
+//                title = it.title,
+//                description = it.description,
+//                url = it.url,
+//                updated = listUpdate,
+//                thumbnail = it.thumbnail)
+//    }
+//}
 
 
 /**
  * Convert Network results to database objects
  */
 fun NetworkVideoContainer.asDatabaseModel(): List<DatabaseVideo> {
+    lateinit var listUpdate: ArrayList<Update>
+    for (i in 0 until (videos.size - 1)){
+        for (j in 0 until (videos[i].updated.size -1)){
+            listUpdate.add(Update(j.toInt(),
+                    videos[i].updated[j].updatedSmall,
+                    videos[i].updated[j].number,
+                    videos[i].id))
+        }
+    }
     return videos.map {
         DatabaseVideo(
                 databaseVideo = DatabaseWithUpdated(
-                        it.databaseVideoId,
+                        it.id,
                         it.url,
                         it.title,
                         it.description,
                         it.thumbnail
                 ),
-                updated = it.updated
+                updated = listUpdate
         )
     }
 }

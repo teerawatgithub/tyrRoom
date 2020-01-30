@@ -29,7 +29,8 @@ import com.example.android.devbyteviewer.domain.DevByteVideo
  */
 @Entity
 data class Update(
-        @PrimaryKey(autoGenerate = true) val updatedId: Int,
+        @PrimaryKey
+        val updatedId: Int,
         val updatedSmall: String,
         val number: Int,
         val updatedOwner: Int
@@ -42,7 +43,7 @@ data class DatabaseVideo(
                 parentColumn = "databaseVideoId",
                 entityColumn = "updatedOwner"
         )
-        val updated: List<Update>
+        val updated: ArrayList<Update>
 )
 
 /**
