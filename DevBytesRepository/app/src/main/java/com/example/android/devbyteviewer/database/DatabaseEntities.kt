@@ -29,8 +29,8 @@ import com.example.android.devbyteviewer.domain.DevByteVideo
  */
 @Entity
 data class Update(
-        @PrimaryKey (autoGenerate = true)
-        val updatedId: Int,
+        @PrimaryKey(autoGenerate = true)
+        var updatedId: Int?,
         val updatedOwner: Int,
         val updatedSmall: String,
         val number: Int
@@ -68,7 +68,7 @@ fun List<DatabaseVideo>.asDomainModel(): List<DevByteVideo> {
                         url = it.databaseVideo.url,
                         title = it.databaseVideo.title,
                         description = it.databaseVideo.description,
-                        updated = it.updated as ArrayList<Update>,
+                        updated = it.updated,
                         thumbnail = it.databaseVideo.thumbnail)
         }
 }

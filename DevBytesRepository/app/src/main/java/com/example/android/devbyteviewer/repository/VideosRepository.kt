@@ -16,10 +16,10 @@
 
 package com.example.android.devbyteviewer.repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
-import com.example.android.devbyteviewer.database.VideosDatabase
-import com.example.android.devbyteviewer.database.asDomainModel
+import com.example.android.devbyteviewer.database.*
 import com.example.android.devbyteviewer.domain.DevByteVideo
 import com.example.android.devbyteviewer.network.DevByteNetwork
 import com.example.android.devbyteviewer.network.asDatabaseModel
@@ -37,6 +37,7 @@ class VideosRepository(private val database: VideosDatabase) {
         it.asDomainModel()
     }
 
+
     /**
      * Refresh the videos stored in the offline cache.
      *
@@ -50,14 +51,31 @@ class VideosRepository(private val database: VideosDatabase) {
             Timber.d("refresh videos is called");
             val playlist = DevByteNetwork.devbytes.getPlaylist().await()
 
-            for (i in 0 until (playlist.size - 1)) {
-                database.videoDao.insertDatabaseWithUpdated(playlist[i].asDatabaseModel())
-                for (j in 0 until (playlist[i].videos.size)) {
-                    database.videoDao.insertUpdated(playlist[i].videos[j].asUpdatedDatebaseModel(j))
-                }
-            }
+            Log.i("test123", "on insert log ${playlist[0].videos}")
+
+//            for (i in 0 until (playlist.size - 1)) {
+//                database.videoDao.insertDatabaseWithUpdated(playlist[i].asDatabaseModel(i))
+//                    database.videoDao.insertUpdated(playlist[0].videos[i].asUpdatedDatebaseModel(i))
+//
+//            }
+
+            database.videoDao.insertDatabaseWithUpdated(listOf(DatabaseWithUpdated(1,
+                    "https://www.youtube.com/watch?v=sYGKUtM2ga8",
+                    "Android Jetpack",
+                    "test 3456376dfgkjsasdser",
+                    "https://i4.ytimg.com/vi/sYGKUtM2ga8/hqdefault.jpg")))
+
+            database.videoDao.insertUpdated(listOf(Update(1,1,"2018-06-07T17:09:43+00:00",888),
+                    Update(3,1,"2018-06-07T17:09:43+00:00",111)))
 
 
+            database.videoDao.insertDatabaseWithUpdated(listOf(DatabaseWithUpdated(2,
+                    "https://www.youtube.com/watch?v=sYGKUtM2ga8",
+                    "Android Jetpack",
+                    "test 3456376dfgkjsasdser",
+                    "https://i4.ytimg.com/vi/sYGKUtM2ga8/hqdefault.jpg")))
+
+            database.videoDao.insertUpdated(listOf(Update(2,1,"2018-06-07T17:09:43+00:00",999)))
         }
     }
 

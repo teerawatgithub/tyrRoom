@@ -26,13 +26,16 @@ interface VideoDao {
     @Query("select * from database_with_updated")
     fun getVideos(): LiveData<List<DatabaseVideo>>
 
-//    @Transaction
-//    @Query("select * from `update` WHERE updatedSmall LIKE :search")
-//    fun findByUpdated(search: String): LiveData<List<DatabaseVideo>>
+
+    @Transaction
+    @Query("select * from database_with_updated INNER JOIN `Update` ON updatedOwner = databaseVideoId WHERE updatedId = :search")
+    fun findByUpdated(search: Int): LiveData<List<DatabaseVideo>>
 
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE )
     fun insertDatabaseWithUpdated( videos: List<DatabaseWithUpdated>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE )
     fun insertUpdated( updated: List<Update>)
 }
 
@@ -43,15 +46,15 @@ abstract class VideosDatabase: RoomDatabase() {
     abstract val videoDao: VideoDao
 }
 
-//private lateinit var INSTANCE: VideosDatabase
-//
-//fun getDatabase(context: Context): VideosDatabase {
-//    synchronized(VideosDatabase::class.java) {
-//        if (!::INSTANCE.isInitialized) {
-//            INSTANCE = Room.databaseBuilder(context.applicationContext,
-//                    VideosDatabase::class.java,
-//                    "videos").build()
-//        }
-//    }
-//    return INSTANCE
-//}
+private lateinit var INSTANCE: VideosDatabase
+
+fun getDatabase(context: Context): VideosDatabase {
+    synchronized(VideosDatabase::class.java) {
+        if (!::INSTANCE.isInitialized) {
+            INSTANCE = Room.databaseBuilder(context.applicationContext,
+                    VideosDatabase::class.java,
+                    "videosV2").build()
+        }
+    }
+    return INSTANCE
+}

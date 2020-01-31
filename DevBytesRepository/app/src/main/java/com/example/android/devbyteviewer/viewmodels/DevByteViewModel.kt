@@ -17,15 +17,16 @@
 package com.example.android.devbyteviewer.viewmodels
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.android.devbyteviewer.database.DatabaseVideo
 import com.example.android.devbyteviewer.database.getDatabase
 import com.example.android.devbyteviewer.domain.DevByteVideo
 import com.example.android.devbyteviewer.network.DevByteNetwork
-import com.example.android.devbyteviewer.network.asDomainModel
 import com.example.android.devbyteviewer.repository.VideosRepository
 import kotlinx.coroutines.*
 import java.io.IOException
@@ -52,6 +53,7 @@ class DevByteViewModel(application: Application) : AndroidViewModel(application)
      * A playlist of videos displayed on the screen.
      */
     val playlist = videosRepository.videos
+
 
     /**
      * This is the job for all coroutines started by this ViewModel.
@@ -109,6 +111,7 @@ class DevByteViewModel(application: Application) : AndroidViewModel(application)
         viewModelScope.launch {
             try {
                 videosRepository.refreshVideos()
+                Log.i("test123", playlist.value.toString())
                 _eventNetworkError.value = false
                 _isNetworkErrorShown.value = false
 
