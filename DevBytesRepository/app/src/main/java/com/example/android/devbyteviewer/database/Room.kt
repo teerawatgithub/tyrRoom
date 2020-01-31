@@ -28,15 +28,15 @@ interface VideoDao {
 
 
     @Transaction
-    @Query("select * from database_with_updated INNER JOIN `Update` ON updatedOwner = databaseVideoId WHERE updatedId = :search")
+    @Query("select * from database_with_updated INNER JOIN updated ON updatedOwner = databaseVideoId WHERE updatedId = :search")
     fun findByUpdated(search: Int): LiveData<List<DatabaseVideo>>
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE )
-    fun insertDatabaseWithUpdated( videos: List<DatabaseWithUpdated>)
+    fun insertDatabaseWithUpdated( videos: DatabaseWithUpdated)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE )
-    fun insertUpdated( updated: List<Update>)
+    fun insertUpdated( updated: Update)
 }
 
 

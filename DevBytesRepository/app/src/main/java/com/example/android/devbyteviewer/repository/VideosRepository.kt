@@ -48,35 +48,53 @@ class VideosRepository(private val database: VideosDatabase) {
      */
     suspend fun refreshVideos() {
         withContext(Dispatchers.IO) {
-            Timber.d("refresh videos is called");
+            Timber.d("refresh videos is called")
             val playlist = DevByteNetwork.devbytes.getPlaylist().await()
 
             Log.i("test123", "on insert log ${playlist[0].videos}")
 
-//            for (i in 0 until (playlist.size - 1)) {
-//                database.videoDao.insertDatabaseWithUpdated(playlist[i].asDatabaseModel(i))
-//                    database.videoDao.insertUpdated(playlist[0].videos[i].asUpdatedDatebaseModel(i))
-//
+            var countJ = 0
+
+            for (i in 0 until (playlist[0].videos.size)) {
+                database.videoDao.insertDatabaseWithUpdated(DatabaseWithUpdated(i,
+                        playlist[0].videos[i].url,
+                        playlist[0].videos[i].title,
+                        playlist[0].videos[i].description,
+                        playlist[0].videos[i].thumbnail))
+                for (j in 0 until (playlist[0].videos[i].updated.size)) {
+                    database.videoDao.insertUpdated(Update(countJ,
+                            i,
+                            playlist[0].videos[i].updated[j].updatedSmall,
+                            playlist[0].videos[i].updated[j].number))
+                    countJ++
+                }
+            }
+//            var mainList: ArrayList<DatabaseWithUpdated> = listOf(DatabaseWithUpdated(0,"a", " ", " ", " ", ))
+//            var updatedList: ArrayList<Update>
+
+//            for (i in 1 until (playlist[0].videos.size)) {
+//                Timber.d("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+//                mainList.add(i, DatabaseWithUpdated(i,
+//                        playlist[0].videos[i].url,
+//                        playlist[0].videos[i].title,
+//                        playlist[0].videos[i].description,
+//                        playlist[0].videos[i].thumbnail))
+//                for (j in 0 until (playlist[0].videos[i].updated.size)) {
+//                    updatedList.add(countJ, Update(countJ,
+//                            i,
+//                            playlist[0].videos[i].updated[j].updatedSmall,
+//                            playlist[0].videos[i].updated[j].number))
+//                    countJ++
+//                }
+//                if (i == (playlist[0].videos.size-1))
+//                    Timber.d("ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ")
 //            }
+//            Timber.d("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!${mainList.toString()}")
+//
+//                database.videoDao.insertDatabaseWithUpdated(mainList.toList())
+//
+//                database.videoDao.insertUpdated(updatedList.toList())
 
-            database.videoDao.insertDatabaseWithUpdated(listOf(DatabaseWithUpdated(1,
-                    "https://www.youtube.com/watch?v=sYGKUtM2ga8",
-                    "Android Jetpack",
-                    "test 3456376dfgkjsasdser",
-                    "https://i4.ytimg.com/vi/sYGKUtM2ga8/hqdefault.jpg")))
-
-            database.videoDao.insertUpdated(listOf(Update(1,1,"2018-06-07T17:09:43+00:00",888),
-                    Update(3,1,"2018-06-07T17:09:43+00:00",111)))
-
-
-            database.videoDao.insertDatabaseWithUpdated(listOf(DatabaseWithUpdated(2,
-                    "https://www.youtube.com/watch?v=sYGKUtM2ga8",
-                    "Android Jetpack",
-                    "test 3456376dfgkjsasdser",
-                    "https://i4.ytimg.com/vi/sYGKUtM2ga8/hqdefault.jpg")))
-
-            database.videoDao.insertUpdated(listOf(Update(2,1,"2018-06-07T17:09:43+00:00",999)))
         }
     }
-
 }

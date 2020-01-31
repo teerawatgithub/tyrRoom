@@ -16,6 +16,8 @@
 
 package com.example.android.devbyteviewer.network
 
+import android.net.Network
+import androidx.room.Database
 import androidx.room.PrimaryKey
 import com.example.android.devbyteviewer.database.DatabaseVideo
 import com.example.android.devbyteviewer.database.DatabaseWithUpdated
@@ -54,41 +56,23 @@ data class NetworkVideo(
         val updated: List<UpdatedNetWork>,
         val thumbnail: String)
 
+/**
+ * Convert Network results to database objects
+ */
+//fun NetworkVideo.asTest(): DatabaseWithUpdated {
+//    return title.trim()
+//}
+
 @JsonClass(generateAdapter = true)
 data class UpdatedNetWork(
         val updatedSmall: String,
         val number: Int)
-
-/**
- * Convert Network results to database objects
- */
-//fun NetworkVideoContainer.asDomainModel(): List<DevByteVideo> {
-//
-//    return videos.map {
-//        DevByteVideo(
-//                title = it.title,
-//                description = it.description,
-//                url = it.url,
-//                updated = listUpdate,
-//                thumbnail = it.thumbnail)
-//    }
-//}
 
 
 /**
  * Convert Network results to database objects
  */
 fun NetworkVideoContainer.asDatabaseModel(iId: Int): List<DatabaseWithUpdated> {
-//    lateinit var listUpdate: ArrayList<Update>
-//    for (i in 0 until (videos.size - 1)){
-//        for (j in 0 until (videos[i].updated.size -1)){
-//            listUpdate.add(Update(j.toInt(),
-//                    videos[i].id,
-//                    videos[i].updated[j].updatedSmall,
-//                    videos[i].updated[j].number
-//                    ))
-//        }
-//    }
     return videos.map {
         DatabaseWithUpdated(
                 databaseVideoId = iId,
@@ -104,7 +88,7 @@ fun NetworkVideoContainer.asDatabaseModel(iId: Int): List<DatabaseWithUpdated> {
 fun NetworkVideo.asUpdatedDatebaseModel(iId: Int): List<Update> {
     return  updated.map {
         Update(
-                updatedId = null,
+                updatedId = iId,
                 updatedOwner = iId,
                 updatedSmall = it.updatedSmall,
                 number = it.number

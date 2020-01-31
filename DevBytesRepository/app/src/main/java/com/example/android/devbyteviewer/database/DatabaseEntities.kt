@@ -16,10 +16,7 @@
 
 package com.example.android.devbyteviewer.database
 
-import androidx.room.Embedded
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.Relation
+import androidx.room.*
 import com.example.android.devbyteviewer.domain.DevByteVideo
 
 
@@ -27,10 +24,10 @@ import com.example.android.devbyteviewer.domain.DevByteVideo
  * Database entities go in this file. These are responsible for reading and writing from the
  * database.
  */
-@Entity
+@Entity(tableName = "updated")
 data class Update(
-        @PrimaryKey(autoGenerate = true)
-        var updatedId: Int?,
+        @PrimaryKey
+        val updatedId: Int,
         val updatedOwner: Int,
         val updatedSmall: String,
         val number: Int
